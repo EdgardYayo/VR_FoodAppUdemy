@@ -13,6 +13,7 @@ const Search = ({ getData }) => {
   const handleSubmit = (event) => {
     event.preventDefault()
     getData(inputValue)
+    setInputValue('')
 
   }
 

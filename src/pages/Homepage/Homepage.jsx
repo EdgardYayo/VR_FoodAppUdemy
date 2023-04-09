@@ -1,12 +1,14 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Search from "../../components/Search/Search"
 import style from './Homepage.module.css'
+import RecipeItem from "../../components/RecipeItem/RecipeItem"
 
 
 const Homepage = () => {
 
     const [loading, setLoading] = useState(false)
     const [recipes, setRecipes] = useState([])
+    const load = useRef();
 
 
     const getDataFromSearch = (getData) => {
@@ -29,11 +31,37 @@ const Homepage = () => {
         getRecipes()
     }
 
-    console.log(loading, recipes, "The data is here");
+
+    const handleLoading = () => {
+        if(loading){
+            setTimeout(() => {
+                load.current.innerText = "Sorry I think there are no recipes with that name"
+            }, 3000)
+        } else {
+            return 
+        }
+    }
+
+
+    useEffect(() => {
+        handleLoading()
+    }, [loading])
+
 
     return (
         <div className={style.homepage}>
             <Search getData={getDataFromSearch} />
+            {
+                loading && <p className={style.loading} ref={load}>Loading recipes!! Please Wait...</p>
+            }
+
+            { recipes && loading === false && recipes.length > 0 ? 
+              recipes.map((item) => <RecipeItem 
+              key={item.id} 
+              image={item.image}
+              title={item.title}
+              /> )
+              : null  }
         </div>
     )
 }
